@@ -1,0 +1,38 @@
+application:
+  subdomain: photofield
+  multi_instance: false
+  # PhotoField has no user accounts or login at all (it just serves the photo
+  # collections you point it at), so it must NOT be exposed via public_path;
+  # the platform login gate stays the only line of defense.
+  upstreams:
+    - location: /package-licenses/
+      backend: file:///lzcapp/pkg/content/licenses/
+    - location: /
+      backend: http://photofield:8080/
+services:
+  photofield:
+    # upstream: ghcr.io/smilyorg/photofield:v0.25.0
+    image: ghcr.1ms.run/smilyorg/photofield:v0.25.0
+    environment:
+      - TZ=Asia/Shanghai
+    binds:
+      - /lzcapp/var/data:/app/data
+      - /lzcapp/var/photos:/app/photos:ro
+usage: |
+  PhotoField 是一个高性能照片库查看器：把你机器上的照片目录渲染成
+  可平滑缩放的瓦片流（类似地图的无限缩放浏览），支持时间线布局、
+  子目录自动展开、视频缩略图等，纯 Go 单容器、无需数据库。
+
+  使用方法：
+  1. 把照片放进本应用数据目录下的 photos 文件夹（对应容器内
+     /app/photos，只读挂载），打开应用即可浏览默认的 photos 集合。
+  2. 进阶配置：在数据目录（对应容器内 /app/data）创建
+     configuration.yaml 自定义集合、布局、缩略图缓存等，
+     完整选项见官方 defaults.yaml：https://github.com/SmilyOrg/photofield
+  3. 缓存数据库保存在 /lzcapp/var/data，卸载应用会一并删除；
+     照片目录本身只读挂载，应用不会改动你的原始照片。
+
+  数据与安全：
+  - 本应用自身没有任何账号与登录机制，因此本包不对外开放未登录访问
+    （保持平台入口鉴权），能通过平台鉴权打开该应用的用户即可浏览全部照片。
+  - 本包未做实机验证，功能以官方文档为准，遇到问题请反馈。

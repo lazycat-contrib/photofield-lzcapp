@@ -1,0 +1,18 @@
+package: community.lazycat.app.photofield
+name: photofield
+version: 0.25.0
+description: "Scalable photo library viewer with fast zoomable image tiles."
+min_os_version: "1.5.0"
+homepage: https://github.com/SmilyOrg/photofield
+author: SmilyOrg
+license: MIT
+permissions:
+  required:
+    - net.internet
+locales:
+  zh:
+    name: PhotoField 照片库
+    description: "高性能照片库查看器：将照片目录渲染为可平滑缩放的瓦片流，支持时间线布局与视频，纯 Go 单容器、无数据库。"
+  en:
+    name: PhotoField
+    description: "Scalable photo library viewer with fast zoomable image tiles, timeline layout and video support."
